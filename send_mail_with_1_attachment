@@ -1,0 +1,23 @@
+Sub SendSingleAttachment()
+  Dim OutApp As Object
+  Dim OutMail As Object
+  
+  'Create the email
+  Set OutApp = CreateObject("Outlook.Application")
+  Set OutMail = OutApp.CreateItem(0)
+  
+  With OutMail
+    .To = "recipient@example.com"
+    .Subject = "Single Attachment from Desktop"
+    .HTMLBody = "Here is the attachment you requested:"
+    
+    'Add the attachment to the email
+    .Attachments.Add "C:\Users\UserName\Desktop\chart.xlsx"
+    
+    .Send
+  End With
+  
+  'Clean up
+  Set OutMail = Nothing
+  Set OutApp = Nothing
+End Sub
