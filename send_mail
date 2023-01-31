@@ -1,0 +1,14 @@
+Sub SendEmail()
+    Dim olApp As Object
+    Dim olMail As Object
+    Set olApp = CreateObject("Outlook.Application")
+    Set olMail = olApp.CreateItem(0)
+    With olMail
+        .To = "recipient@example.com"
+        .CC = "cc@example.com"
+        .BCC = "bcc@example.com"
+        .Subject = "Subject of the email"
+        .Body = "Body of the email"
+        .Send
+    End With
+End Sub
