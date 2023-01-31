@@ -1,0 +1,65 @@
+Sub SendMultipleAttachments()
+  Dim OutApp As Object
+  Dim OutMail As Object
+  Dim MailAttachments As Variant
+  
+  'Get all files with the word "chart" in the file name
+  MailAttachments = GetAttachments("C:\Users\UserName\Desktop", "chart")
+  
+  'Create the email
+  Set OutApp = CreateObject("Outlook.Application")
+  Set OutMail = OutApp.CreateItem(0)
+  
+  With OutMail
+    .To = "recipient@example.com"
+    .Subject = "Multiple Attachments from Desktop"
+    .HTMLBody = "Here are the attachments you requested:"
+    
+    'Add the attachments to the email
+    For i = LBound(MailAttachments) To UBound(MailAttachments)
+      .Attachments.Add MailAttachments(i)
+    Next i
+    
+    .Send
+  End With
+  
+  'Clean up
+  Set OutMail = Nothing
+  Set OutApp = Nothing
+End Sub
+
+Function GetAttachments(FilePath As String, FileNameContains As String) As Variant
+  Dim FileSystem As Object
+  Dim Folder As Object
+  Dim File As Object
+  Dim FileCounter As Integer
+  
+  'Create the file system object
+  Set FileSystem = CreateObject("Scripting.FileSystemObject")
+  
+  'Get the folder specified by FilePath
+  Set Folder = FileSystem.GetFolder(FilePath)
+  
+  'Count the number of files in the folder
+  FileCounter = 0
+  For Each File In Folder.Files
+    If InStr(File.Name, FileNameContains) Then
+      FileCounter = FileCounter + 1
+    End If
+  Next File
+  
+  'Create an array to store the attachments
+  ReDim MailAttachments(0 To FileCounter - 1) As Variant
+  FileCounter = 0
+  
+  'Populate the array with the attachments
+  For Each File In Folder.Files
+    If InStr(File.Name, FileNameContains) Then
+      MailAttachments(FileCounter) = File.Path
+      FileCounter = FileCounter + 1
+    End If
+  Next File
+  
+  'Return the attachments
+  GetAttachments = MailAttachments
+End Function
