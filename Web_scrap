@@ -1,0 +1,23 @@
+Sub SearchForIphoneOnAmazon()
+    Dim objIE As Object
+    Set objIE = CreateObject("InternetExplorer.Application")
+    objIE.Visible = True
+    objIE.Navigate "https://www.amazon.com"
+    Do While objIE.Busy
+        DoEvents
+    Loop
+    objIE.Document.getElementById("twotabsearchtextbox").Value = "iphone"
+    objIE.Document.forms(0).submit
+    Do While objIE.Busy
+        DoEvents
+    Loop
+    Dim productList As Object
+    Set productList = objIE.Document.getElementById("s-results-list-atf")
+    Dim product As Object
+    For Each product In productList.getElementsByTagName("li")
+        Debug.Print product.innerText
+    Next product
+    objIE.Quit
+    Set objIE = Nothing
+End Sub
+
